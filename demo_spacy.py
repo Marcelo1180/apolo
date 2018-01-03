@@ -1,46 +1,27 @@
 #!/usr/bin/fab -f
 # class Contexto
 from __future__ import print_function
-import gettext
-
-gettext.textdomain('hello')
-gettext.bindtextdomain('hello', '/mo')
-_ = gettext.gettext
-
-print(_('Hello'))
-print(_('World'))
-
-
-def apolo_out(func):
-    def handle_error(*args, **kwargs):
-        try:
-            print(func(*args, **kwargs))
-        except Exception as e:
-            print(_('Ocurrio el siguiente error, {:}'.format(e)))
-    return handle_error
-
-def apolo_fabric(func):
-    def handle_error(*args, **kwargs):
-        env.password = '*****'
-        # http://blog.desafiolatam.com/configurando-git-github-osx-linux/
-        env.forward_agent = True
-        # with settings(host_string='localhost', key_filename='~/.ssh/id_rsa.pub'):
-        with settings(host_string='localhost'):
-            return func(*args, **kwargs)
-    return handle_error
-
-
 import sys
 import getpass
 from fabric.api import run, env, task, settings, local, sudo
 from fabric.context_managers import cd
+from apolo import apolo_out, apolo_fabric, _
 
+print(_('Hello'))
+print(_('World'))
 
 class Git(object):
     # def __init__(self):
     #     env.hosts = ['localhost']
     # @task
     # def git_clone(self, , branch):
+    @apolo_out
+    @apolo_fabric
+    def git_clone(self, branch=''):
+        # run('ssh-add -L')
+        run('git clone https://github.com/Marcelo1180/demo_angular /tmp/demo')
+        return _('Repositorio clonado correctamente')
+
     @apolo_out
     @apolo_fabric
     def git_pull(self, branch=''):
@@ -97,6 +78,7 @@ class RepositorioActualizar(Repositorio):
 
     def run(self):
         g = Git()
+        # g.git_clone('')
         g.git_pull('')
 
 
