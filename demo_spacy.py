@@ -18,7 +18,6 @@ class Git(object):
     @apolo_out
     @apolo_fabric
     def git_clone(self, branch=''):
-        # run('ssh-add -L')
         run('git clone https://github.com/Marcelo1180/demo_angular /tmp/demo')
         return _('Repositorio clonado correctamente')
 
